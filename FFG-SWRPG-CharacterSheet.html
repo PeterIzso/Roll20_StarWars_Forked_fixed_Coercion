@@ -1600,6 +1600,34 @@
         </div><!--Skills List-->
     </div><!-- Skills Tab -->
     <div class="sheet-tab-content sheet-tab-talents">
+        <div>
+            <div class="sheet-row">
+                <div class="sheet-small-12 sheet-column">
+                    <h3 class="sheet-section-header" data-i18n="currenttarget">Current Target</h3>
+                    <table cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label><span data-i18n="enemytype">Type of Enemy:</span></label>
+                                    <select name="attr_target-type">
+                                        <option value="character">Character</option>
+                                        <option value="npc">NPC</option>
+                                        <option value="companion">Companion</option>
+                                        <option value="beast">Beast</option>
+                                        <option value="starship">Starship</option>
+                                        <option value="vehicle">Vehicle</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label><span data-i18n="critbonus">Critical Bonus Against Enemy:</span></label>
+                                    <input type="number" step="10" name="attr_critical-bonus">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <b data-i18n="initiative">Initiative</b><input name="attr_character-Initiative" value="1" checked="checked" style="width:78px;margin:-13px -20px 0 -62px" class="sheet-toggle sheet-initiative-toggle-small" type="checkbox"/><span></span>
         <div class="sheet-initiative-toggle-small">
             <div class="sheet-row">
@@ -1681,7 +1709,7 @@
                                             <label data-i18n="critical">Critical</label>
                                             <input name='attr_critical' type="text" value="0" />
                                         </td>
-                                        <td><button type='roll' name='roll_weapon' value='!eed characterID(@{character_id}) label(Weapon:@{weaponmake}|Damage:@{damage}|Critical:@{critical}|Range:@{weaponrange}|Qualities:@{weaponspecial}) @{weapondice} combat(personal) encum(@{encumbrancemax}|@{encumbrance}) @{weaponskill} @{weaponcondition} @{dicePool} (gmdice) calculateDamage(@{damage}|@{critical})'></button></td>
+                                        <td><button type='roll' name='roll_weapon' value='!eed characterID(@{character_id}) label(Weapon:@{weaponmake}|Damage:@{damage}|Critical:@{critical}|Range:@{weaponrange}|Qualities:@{weaponspecial}) @{weapondice} combat(personal) encum(@{encumbrancemax}|@{encumbrance}) @{weaponskill} @{weaponcondition} @{dicePool} (gmdice) calculateDamage(@{damage}|@{critical}|@{target-type}|@{critical-bonus})'></button></td>
                                         <td>
                                             <label data-i18n="encum">Encum</label>
                                             <input name='attr_weapon-encum' type="text" value="0" />
