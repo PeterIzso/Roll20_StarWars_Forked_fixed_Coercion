@@ -1620,7 +1620,21 @@
                                 </td>
                                 <td>
                                     <label><span data-i18n="critbonus">Critical Bonus Against Enemy:</span></label>
-                                    <input type="number" step="10" name="attr_critical-bonus">
+                                    <input type="number" step="10" name="attr_critical-bonus" value="0">
+                                </td>
+                                <td>
+                                    <label><span data-i18n="rollcritnow">Roll Critical Now:</span></label>
+                                    <button type='roll' name='roll_CoolInit' value='!eed characterID(@{character_id}) rollEmemyCritical'></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label><span data-i18n="damagebonus">Damage Bonus Against Enemy:</span></label>
+                                    <input type="number" step="1" name="attr_damage-bonus" value="0">
+                                </td>
+                                <td> 
+                                </td>
+                                <td> 
                                 </td>
                             </tr>
                         </tbody>
@@ -1709,7 +1723,13 @@
                                             <label data-i18n="critical">Critical</label>
                                             <input name='attr_critical' type="text" value="0" />
                                         </td>
-                                        <td><button type='roll' name='roll_weapon' value='!eed characterID(@{character_id}) label(Weapon:@{weaponmake}|Damage:@{damage}|Critical:@{critical}|Range:@{weaponrange}|Qualities:@{weaponspecial}) @{weapondice} combat(personal) encum(@{encumbrancemax}|@{encumbrance}) @{weaponskill} @{weaponcondition} @{dicePool} (gmdice) calculateDamage(@{damage}|@{critical}|@{target-type}|@{critical-bonus})'></button></td>
+                                        <td>
+                                            <button 
+                                                type='roll'
+                                                name='roll_weapon'
+                                                value='!eed characterID(@{character_id}) label(Weapon:@{weaponmake}|Damage:@{damage}|Critical:@{critical}|Range:@{weaponrange}|Qualities:@{weaponspecial}) @{weapondice} @{weaponattachmodifier1} @{weaponattachmodifier2} @{weaponattachmodifier3} @{weaponattachmodifier4} @{weaponattachmodifier5} @{weaponattachmodifier6} @{weaponattachmodifier7} combat(personal) encum(@{encumbrancemax}|@{encumbrance}) @{weaponskill} @{weaponcondition} @{dicePool} (gmdice) calculateDamage(@{damage}|@{critical}|@{weapon-damage-bonus}|@{weapon-critical-bonus}|@{weaponattachdambonus1}|@{weaponattachcritbonus1}|@{weaponattachdambonus2}|@{weaponattachcritbonus2}|@{weaponattachdambonus3}|@{weaponattachcritbonus3}|@{weaponattachdambonus4}|@{weaponattachcritbonus4}|@{weaponattachdambonus5}|@{weaponattachcritbonus5}|@{weaponattachdambonus6}|@{weaponattachcritbonus6}|@{weaponattachdambonus7}|@{weaponattachcritbonus7})'>
+                                            </button>
+                                        </td>
                                         <td>
                                             <label data-i18n="encum">Encum</label>
                                             <input name='attr_weapon-encum' type="text" value="0" />
@@ -1798,6 +1818,12 @@
                                         <td><textarea rows="2" name="attr_weaponspecial"></textarea></td>
                                     </tr>
                                     <tr>
+                                        <td><label data-i18n="weapondamagebonus:">Damage Bonus:</label></td>
+                                        <td><input name='attr_weapon-damage-bonus' type="number" step="1" value="0" /></td>
+                                        <td><label data-i18n="weaponcritbonus:">Critical Bonus:</label></td>
+                                        <td><input name='attr_weapon-critical-bonus' type="number" step="10" value="0" /></td>
+                                    </tr>
+                                    <tr>
                                         <td colspan="4">
                                             &nbsp;
                                         </td>
@@ -1813,7 +1839,35 @@
                                         <tr>
                                             <th data-i18n="attachmentname">Attachment Name</th>
                                             <th data-i18n="hardpoints">Hard Points</th>
-                                            <th data-i18n="basemodifiers">Base Modifiers</th>
+                                            <th>
+                                                <span style="float:left" data-i18n="modifiers">Modifiers</span>
+                                                <div class="sheet-tips">
+                                                    <div class="sheet-help-def sheet-help">
+                                                        <div class="sheet-icon">
+                                                            <span class="sheet-icon-question">?</span>
+                                                        </div>
+                                                        <div class="sheet-help-content" style="margin-left:-225px">
+                                                            <h5 data-i18n="addingdice">Adding Dice</h5>
+                                                            <p data-i18n="addingdicetext">
+                                                                To add additional dice write the number of
+                                                                dice and color letter you want to roll.
+                                                                Additionally you can add some dice symbols
+                                                                to automatically add to the roll.
+                                                            </p>
+                                                            <p data-i18n="example:">Example: <b>1b 1g</b> outputs <span class="sheet-icon-B"></span><span class="sheet-icon-G"></span></p>
+                                                            <p data-i18n="exampletext">
+                                                                b -> Blue = Boost, blk -> BLack = Setback
+                                                                g -> Green = Ability, y -> Yellow = Proficiency
+                                                                p -> Purple = Difficulty, r -> Red = Challenge
+                                                                w -> White = Force
+                                                                s = Success, f = Failure, a = Advantage, t = Threat
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div><!-- Modifier Help -->
+                                            </th>
+                                            <th>Dam Bonus</th>
+                                            <th>Crit Bonus</th>
                                             <th data-i18n="modifications">Modifications</th>
                                             <th data-i18n="booknpage">Book &amp; Page</th>
                                         </tr>
@@ -1822,49 +1876,63 @@
                                         <tr>
                                             <td><input name='attr_weaponattach1' type="text" /></td>
                                             <td><input name='attr_weaponattachHP1' type="number" /></td>
-                                            <td><textarea rows="3" name="attr_weaponattachbase1"></textarea></td>
+                                            <td><input name="attr_weaponattachmodifier1" type="text"></td>
+                                            <td><input name="attr_weaponattachdambonus1" type="number" step="1" value="0"></td>
+                                            <td><input name="attr_weaponattachcritbonus1" type="number" step="10" value="0"></td>
                                             <td><textarea rows="3" name="attr_weaponattachmod1"></textarea></td>
                                             <td><input type="text" name="attr_weaponattachbookpage1"/></td>
                                         </tr>
                                         <tr>
                                             <td><input name='attr_weaponattach2' type="text" /></td>
                                             <td><input name='attr_weaponattachHP2' type="number" /></td>
-                                            <td><textarea rows="3" name="attr_weaponattachbase2"></textarea></td>
+                                            <td><input name="attr_weaponattachmodifier2" type="text"></td>
+                                            <td><input name="attr_weaponattachdambonus2" type="number" step="1" value="0"></td>
+                                            <td><input name="attr_weaponattachcritbonus2" type="number" step="10" value="0"></td>
                                             <td><textarea rows="3" name="attr_weaponattachmod2"></textarea></td>
                                             <td><input type="text" name="attr_weaponattachbookpage2"/></td>
                                         </tr>
                                         <tr>
                                             <td><input name='attr_weaponattach3' type="text" /></td>
                                             <td><input name='attr_weaponattachHP3' type="number" /></td>
-                                            <td><textarea rows="3" name="attr_weaponattachbase3"></textarea></td>
+                                            <td><input name="attr_weaponattachmodifier3" type="text"></td>
+                                            <td><input name="attr_weaponattachdambonus3" type="number" step="1" value="0"></td>
+                                            <td><input name="attr_weaponattachcritbonus3" type="number" step="10" value="0"></td>
                                             <td><textarea rows="3" name="attr_weaponattachmod3"></textarea></td>
                                             <td><input type="text" name="attr_weaponattachbookpage3"/></td>
                                         </tr>
                                         <tr>
                                             <td><input name='attr_weaponattach4' type="text" /></td>
                                             <td><input name='attr_weaponattachHP4' type="number" /></td>
-                                            <td><textarea rows="3" name="attr_weaponattachbase4"></textarea></td>
+                                            <td><input name="attr_weaponattachmodifier4" type="text"></td>
+                                            <td><input name="attr_weaponattachdambonus4" type="number" step="1" value="0"></td>
+                                            <td><input name="attr_weaponattachcritbonus4" type="number" step="10" value="0"></td>
                                             <td><textarea rows="3" name="attr_weaponattachmod4"></textarea></td>
                                             <td><input type="text" name="attr_weaponattachbookpage4"/></td>
                                         </tr>
                                         <tr>
                                             <td><input name='attr_weaponattach5' type="text" /></td>
                                             <td><input name='attr_weaponattachHP5' type="number" /></td>
-                                            <td><textarea rows="3" name="attr_weaponattachbase5"></textarea></td>
+                                            <td><input name="attr_weaponattachmodifier5" type="text"></td>
+                                            <td><input name="attr_weaponattachdambonus5" type="number" step="1" value="0"></td>
+                                            <td><input name="attr_weaponattachcritbonus5" type="number" step="10" value="0"></td>
                                             <td><textarea rows="3" name="attr_weaponattachmod5"></textarea></td>
                                             <td><input type="text" name="attr_weaponattachbookpage5"/></td>
                                         </tr>
                                         <tr>
                                             <td><input name='attr_weaponattach6' type="text" /></td>
                                             <td><input name='attr_weaponattachHP6' type="number" /></td>
-                                            <td><textarea rows="3" name="attr_weaponattachbase6"></textarea></td>
+                                            <td><input name="attr_weaponattachmodifier6" type="text"></td>
+                                            <td><input name="attr_weaponattachdambonus6" type="number" step="1" value="0"></td>
+                                            <td><input name="attr_weaponattachcritbonus6" type="number" step="10" value="0"></td>
                                             <td><textarea rows="3" name="attr_weaponattachmod6"></textarea></td>
                                             <td><input type="text" name="attr_weaponattachbookpage6"/></td>
                                         </tr>
                                         <tr>
                                             <td><input name='attr_weaponattach7' type="text" /></td>
                                             <td><input name='attr_weaponattachHP7' type="number" /></td>
-                                            <td><textarea rows="3" name="attr_weaponattachbase7"></textarea></td>
+                                            <td><input name="attr_weaponattachmodifier7" type="text"></td>
+                                            <td><input name="attr_weaponattachdambonus7" type="number" step="1" value="0"></td>
+                                            <td><input name="attr_weaponattachcritbonus7" type="number" step="10" value="0"></td>
                                             <td><textarea rows="3" name="attr_weaponattachmod7"></textarea></td>
                                             <td><input type="text" name="attr_weaponattachbookpage7"/></td>
                                         </tr>
@@ -7927,6 +7995,13 @@
 <div class="sheet-tab-content sheet-tab-gm-dice">
     <div class="sheet-row sheet-section-1">
         <div class="sheet-small-12 sheet-column">
+            <div style="text-align: right;">
+                <label style="text-align: right;"><span data-i18n="usegmdice">Add GM Dice Pool for Character Rolls?</span></label>
+                <select name="attr_use-gm-dice-pool-for-rolls" style="width: 75px;">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
             <br />
             <h3 class="sheet-section-header" data-i18n="gmdicepool">GM Dice Pool</h3>
             <input name="attr_gm-GM-Dice-Pool" value="1" style="width: 250px;height: 30px;margin: -44px -20px 0 297px;float:left;" class="sheet-toggle sheet-dice-section-toggle" type="checkbox" checked="checked"/>
@@ -9115,6 +9190,47 @@
         {{/results}}
     </table>
 </rolltemplate><!-- Roll Template-Base -->
+
+<rolltemplate class="sheet-rolltemplate-critical">
+    <table>
+        <tr><th colspan="2">{{title}} {{#subtitle}}<br /><span class="subheader">{{subtitle}}</span>{{/subtitle}}</th></tr>
+        {{#flavor}}
+        <tr><td colspan="2"><span class="flavor">{{flavor}}</span></td></tr>
+        {{/flavor}}
+        {{#prewide}}
+        <tr><td colspan="2">{{prewide}}</td></tr>
+        {{/prewide}}
+        {{#header}}
+        <tr><td class="tcat-header"><span>{{header}}</span></td><td class="tcat-header"><span>{{item}}</span></td></tr>
+        {{/header}}
+        {{#allprops() title flavor wide roll results subtitle header item prewide wide2 wide3 wide4 wide5}}
+        <tr><td><span class="sheet-tcat">{{key}}</span></td><td>{{value}}</td></tr>
+        {{/allprops() title flavor wide roll results subtitle header item prewide wide2 wide3 wide4 wide5}}
+        {{#wide}}
+        <tr><td colspan="2">{{wide}}</td></tr>
+        {{/wide}}
+        {{#wide2}}
+        <tr><td colspan="2">{{wide2}}</td></tr>
+        {{/wide2}}
+        {{#wide3}}
+        <tr><td colspan="2">{{wide3}}</td></tr>
+        {{/wide3}}
+        {{#wide4}}
+        <tr><td colspan="2">{{wide4}}</td></tr>
+        {{/wide4}}
+        {{#wide5}}
+        <tr><td colspan="2">{{wide5}}</td></tr>
+        {{/wide5}}
+        {{#roll}}
+        <tr><td colspan="2"><span class="tcat" data-i18n="diceroll">Dice Roll</span></td></tr>
+        <tr><td colspan="2">{{roll}}</td></tr>
+        {{/roll}}
+        {{#results}}
+        <tr><td colspan="2"><span class="tcat" data-i18n="results">Results</span></td></tr>
+        <tr><td colspan="2">{{results}}</td></tr>
+        {{/results}}
+    </table>
+</rolltemplate><!-- Roll Template-Critical -->
 
 <rolltemplate class="sheet-rolltemplate-suggestion">
     <table>
